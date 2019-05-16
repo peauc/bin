@@ -1,0 +1,4 @@
+#!/bin/bash
+#This one liner put a filename into the copy buffer the be pasted as a complete file
+xclip -i -t text/uri-list $1
+

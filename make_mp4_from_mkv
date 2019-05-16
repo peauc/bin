@@ -1,0 +1,27 @@
+#!/bin/bash
+#This script will open a mkv file, convert the video to mp4 and burn the subtitles on it
+#This was made because our samsung tv couldn't accept mkv files
+
+if [ "$#" -ne 2 ]; then
+	echo "Wrong number of arguments"
+	echo "Usage: ./make_mp4.sh mkv_file.mkv name_of_output_video.mp4"
+	exit 1
+fi
+
+tsubtitles=$(mktemp /tmp/make_mp4.XXX.srt)
+tvideofile=$(mktemp /tmp/make_mp4.XXX.mp4)
+
+#we get the subtitles from the mkv file
+echo "subtitle has the name $tsubtitles"
+ffmpeg -i "$1" "$tsubtitles"
+
+#we change the police from the subtitles to make it readable on the tv
+sed -i -- 's/size="36"/size="16/g"' "$tsubtitles"
+
+#we format the video the be mp4
+ffmpeg -i "$1" -codec copy $tvideofile
+
+echo "Burn baby burn"
+#we then burn the subtitles into the videofile and giving it the name it's user
+ffmpeg -i "$tvideofile" -filter:v subtitles="$tsubtitles" "$2"
+
