@@ -16,7 +16,7 @@ echo "subtitle has the name $tsubtitles"
 ffmpeg -i "$1" "$tsubtitles"
 
 #we change the police from the subtitles to make it readable on the tv
-sed -i -- 's/size="36"/size="16/g"' "$tsubtitles"
+sed -i 's/size="36"/size="16"/g' "$tsubtitles"
 
 #we format the video the be mp4
 ffmpeg -i "$1" -codec copy $tvideofile
